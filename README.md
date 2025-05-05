@@ -5,14 +5,15 @@ A complete solution for auditing Linux host password policies across your networ
 
 ## PROJECT STRUCTURE
 
-.
-├── html_output
-│   └── password_expiry_report.html
+ansible-network-audit/
+├── html_output/
+├    └── password_expiry_report.html
 ├── inventory
-│   └── linux_hosts.ini
+├    └──linux_hosts.ini
 ├── playbook.yml
+├── README.md
 ├── scan_network.sh
-└── templates
+└── templates/
     └── report_template.j2
 
 ## FEATURES
