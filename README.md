@@ -5,16 +5,18 @@ A complete solution for auditing Linux host password policies across your networ
 
 ## PROJECT STRUCTURE
 
+```
 ansible-network-audit/
 ├── html_output/
-├    └── password_expiry_report.html
-├── inventory
-├    └──linux_hosts.ini
+│   └── password_expiry_report.html
+├── inventory/
+│   └── linux_hosts.ini
 ├── playbook.yml
 ├── README.md
 ├── scan_network.sh
 └── templates/
     └── report_template.j2
+```
 
 ## FEATURES
 
@@ -53,12 +55,15 @@ ansible-network-audit/
     
 ## INSTALLATION
 
-1.  Clone the repository:  
-    git clone [https://github.com/your-repo/ansible-network-audit.git](https://github.com/your-repo/ansible-network-audit.git)  
-    cd ansible-network-audit
-    
-2.  Make scripts executable:  
-    chmod +x scan_network.sh
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/geekapt/ansible-network-audit && cd ansible-network-audit
+   ```
+
+2. **Make scripts executable**:
+   ```bash
+   chmod +x scan_network.sh
+   ```
     
 ## CONFIGURATION
 
@@ -66,16 +71,20 @@ ansible-network-audit/
     Edit these variables in the script:
 
 # Valid SSH users to test
-
+```bash
 USERS=("skills" "admin" "Admin")
+```
 
 # Network subnets to scan
 
+```bash
 SUBNETS=("192.168.68.0/24" "192.168.86.0/24")
+```
 
 # SSH key path (default: ~/.ssh/id_rsa)
-
+```bash
 SSH_KEY="~/.ssh/id_rsa"
+```
 
 # Output inventory file
 
@@ -84,7 +93,6 @@ OUTPUT="inventory/linux_hosts.ini"
 2.  INVENTORY FILE EXAMPLE  
     Automatically generated after scanning. Sample content:
     
-
 [linux-hosts]  
 192.168.68.42 ansible_user=skills  
 192.168.68.57 ansible_user=admin
@@ -92,18 +100,23 @@ OUTPUT="inventory/linux_hosts.ini"
 ## USAGE
 
 1.  Run network scanner:  
-    ./scan_network.sh
+    ```bash
+     ./scan_network.sh
+    ```
     
-2.  Execute Ansible playbook:  
+3.  Execute Ansible playbook:  
+    ```bash
     ansible-playbook playbook.yml
+    ```
     
-3.  View the report:  
+5.  View the report:  
+    ```bash
     xdg-open html_output/password_expiry_report.html
-    
+    ```
 
 ## PLAYBOOK DETAILS (playbook.yml)
 
-
+``` bash
 --   name: Collect password expiry information  
     hosts: linux-hosts  
     gather_facts: no  
@@ -141,7 +154,7 @@ OUTPUT="inventory/linux_hosts.ini"
         template:  
         src: templates/report_template.j2  
         dest: "{{ report_path }}"
-        
+```
 
 ## SECURITY CONSIDERATIONS
 
@@ -197,8 +210,4 @@ COMMON ISSUES:
 
 DEBUG MODE:  
 Run playbook with: ansible-playbook playbook.yml -vvv
-
-## LICENSE
-
-MIT License
 
