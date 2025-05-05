@@ -1,0 +1,37 @@
+---
+- name: Collect password expiry information
+  hosts: linux-hosts
+  gather_facts: no
+  become: yes
+  tasks:
+    - name: Find username with UID 1001
+      command: "awk -F: '$3 == 1001 { print $1 }' /etc/passwd"
+      register: user_lookup
+      changed_when: false
+
+    - name: Retrieve password expiry info
+      command: chage -l {{ user_lookup.stdout }}
+      register: chage_output
+
+    - name: Set fact with parsed chage output
+      set_fact:
+        password_info: "{{ chage_output.stdout_lines }}"
+        target_user: "{{ user_lookup.stdout }}"
+
+- name: Generate consolidated HTML report
+  hosts: localhost
+  gather_facts: no
+  vars:
+    report_path: "./html_output/password_expiry_report.html"
+  tasks:
+    - name: Ensure output directory exists
+      file:
+        path: "{{ report_path | dirname }}"
+        state: directory
+        mode: '0755'
+
+    - name: Generate HTML report
+      template:
+        src: templates/report_template.j2
+        dest: "{{ report_path }}"
+

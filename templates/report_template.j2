@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Password Expiry Report</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 80%;
+            margin: 20px auto;
+        }
+        th, td {
+            border: 1px solid #333;
+            padding: 8px 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        h2 {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h2>Password Expiry Report</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Host</th>
+                <th>Password Info</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for host in groups['linux-hosts'] %}
+            <tr>
+		    <td>{{ host }} ({{ hostvars[host].target_user | default("unknown") }})</td>
+
+                <td>
+                    {% if hostvars[host].password_info is defined %}
+                        <ul>
+				{% if hostvars[host].password_info[0] is search("No user with UID 1001") %}
+    <li><i>No user with UID 1001 found</i></li>
+{% else %}
+    {% for line in hostvars[host].password_info %}
+        <li>{{ line }}</li>
+    {% endfor %}
+{% endif %}
+                        </ul>
+                    {% else %}
+                        No data collected.
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
+
